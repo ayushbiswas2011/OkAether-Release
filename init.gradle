@@ -16,19 +16,21 @@ subprojects {
                 libsDir.mkdirs()
             }
             
-            def aarFile = new File(libsDir, "aethersentinel-core.aar")
-            // সরাসরি তোমার পাবলিক রিপোজিটরির রুট থেকে .aar ফাইলটি ডাউনলোড করার লিঙ্ক
-            def downloadUrl = "https://raw.githubusercontent.com/ayushbiswas2011/AetherSentinel-Release/main/aethersentinel-core.aar"
+            // নতুন ব্র্যান্ড নেম অনুযায়ী .aar ফাইলের নাম পরিবর্তন করা হলো
+            def aarFile = new File(libsDir, "okaether-core.aar")
+            
+            // সরাসরি তোমার পাবলিক রিপোজিটরির রুট থেকে নতুন নামের .aar ফাইলটি ডাউনলোড করার লিঙ্ক
+            def downloadUrl = "https://raw.githubusercontent.com/ayushbiswas2011/AetherSentinel-Release/main/okaether-core.aar"
             
             // ফাইলটি কাস্টমারের কম্পিউটারে না থাকলে অটোমেটিক ডাউনলোড শুরু হবে
             if (!aarFile.exists()) {
-                println("AetherSentinel: Fetching official SDK framework from production ledger...")
+                println("OkAether: Fetching official SDK framework from production ledger...")
                 new URL(downloadUrl).withInputStream { i -> 
                     aarFile.withOutputStream { o -> o << i } 
                 }
             }
             
-            // কাস্টমারের অ্যাপের বিল্ড সিস্টেমের সাথে ফাইলটিকে লিংক করে দেবে
+            // কাস্টমারের অ্যাপের বিল্ড সিস্টেমের সাথে ফাইলটিকে লিংক করে দেবে (টাইপো এরর মুক্ত)
             project.dependencies {
                 implementation project.files(aarFile.absolutePath)
             }
