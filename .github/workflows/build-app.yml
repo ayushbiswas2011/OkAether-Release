@@ -43,11 +43,21 @@ jobs:
 
       - name: Build Android App
         run: |
-          PROJECT_DIR=$(dirname $(find . -name "settings.gradle*" | head -n 1))
+          # একদম সঠিক ফোল্ডারটি খুঁজে বের করার জন্য লজিক
+          echo "🔍 Searching for project root..."
+          GRADLE_FILE=$(find . -name "settings.gradle" | head -n 1)
+          
+          if [ -z "$GRADLE_FILE" ]; then
+            echo "❌ Error: Could not find settings.gradle file. Stopping build."
+            exit 1
+          fi
+          
+          PROJECT_DIR=$(dirname "$GRADLE_FILE")
           echo "✅ Project found inside: $PROJECT_DIR"
           cd "$PROJECT_DIR"
           
           echo "🛠️ Auto-generating a clean AndroidManifest.xml..."
+          mkdir -p app/src/main/
           cat << 'EOF' > app/src/main/AndroidManifest.xml
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
@@ -75,7 +85,7 @@ jobs:
           </manifest>
           EOF
           
-          gradle wrapper
+          echo "🚀 Starting Gradle build..."
           chmod +x gradlew
           ./gradlew assembleDebug
 
